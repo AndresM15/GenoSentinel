@@ -1,0 +1,6 @@
+Django>=5.0
+djangorestframework       # Para crear la API REST
+mysqlclient               # Conector para MySQL (Requisito del PDF)
+drf-yasg                  # Para generar Swagger (Requisito del PDF)
+python-dotenv             # Para leer variables de entorno (Seguridad)
+django-cors-headers       # Para que Angular pueda conectarse sin errores
