@@ -10,11 +10,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.client.RestTemplate; // Para el Gateway
+import org.springframework.web.client.RestTemplate;
+import auth_gateway_spring.auth_gateway_spring.auth.JwtRequestFilter; // IMPORTAR FILTRO
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     // --- Bean 1: Codificador de Contraseñas
     // Usaremos BCrypt, el estándar para encriptar contraseñas.
@@ -41,22 +48,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // APIs REST no usan CSRF (Cross-Site Request Forgery)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Usaremos JWT, no sesiones
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas Públicas (Auth y Monitoreo)
-                        .requestMatchers("/auth/**").permitAll() // Login, Registro
-                        .requestMatchers("/health").permitAll()  // Health Check
-
-                        // Rutas Protegidas (El tráfico del Gateway)
-                        // TODAS las rutas de la API deben pasar por el filtro JWT que añadiremos después.
-                        .requestMatchers("/api/v1/**").authenticated() // Rutas que requieren JWT
-
+                        .requestMatchers("/auth/**", "/health").permitAll()
+                        // IMPORTANTE: Permitir OPTIONS para que el Frontend Angular no falle por CORS
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
-                );
-
-        // TODO: En un paso posterior, añadiremos un filtro antes del UsernamePasswordAuthenticationFilter
-        // para interceptar el JWT y validar la identidad.
+                )
+                // <--- 2. AGREGAR EL FILTRO AQUÍ:
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
