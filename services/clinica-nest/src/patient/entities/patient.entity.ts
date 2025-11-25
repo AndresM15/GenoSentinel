@@ -1,5 +1,5 @@
 // Decoradores (Entity,Column,etc) necesarios para la creación de la tabla "Patient"
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 // Creación de una variable tipo "enum" llamada gender.
 export enum gender {
@@ -27,8 +27,8 @@ export class Patient {
     @Column()
     last_name: string;
 
-    @Column()
-    birth_date: string
+    @Column({type: 'date'})
+    birth_date: Date     // TypeORM usa Date para mapear el tipo DATE de la base de datos.
 
     @Column({ type: 'enum', enum: gender })
      // Usamos el tipo de dato 'enum'.

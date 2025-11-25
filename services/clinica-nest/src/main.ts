@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';  // El Swagger documenta todos nuestros ENDPOINTS.
+import { SwaggerModule,DocumentBuilder } from '@nestjs/swagger';  // El Swagger documenta todos nuestros ENDPOINTS.
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,9 +13,9 @@ async function bootstrap() {
     .addTag('Clinica')
     .build();
   
-  const document = SwaggerModule.createDocument(app,config);   // Genera el documento OpenAPI con toda la descripción de la API.
-  SwaggerModule.setup('appi',app,document)                     // Expone la documentación Swagger en la ruta /appi.
+  const documentFactory = SwaggerModule.createDocument(app,config);   // Genera el documento OpenAPI con toda la descripción de la API.
+  SwaggerModule.setup('appi',app,documentFactory)                     // Expone la documentación Swagger en la ruta /appi.
 
-  await app.listen(3000);
+   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

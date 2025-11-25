@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { Patient } from './entities/patient.entity';
-import { CreatePatientDto } from './dto/create-patient.dto';
-import { UpdatePatientDto } from './dto/update-patient.dto';
+import { Injectable } from '@nestjs/common'
+import { Repository } from 'typeorm'
+import { Patient } from './entities/patient.entity'
+import { CreatePatientDto } from './dto/create-patient.dto'
+import { UpdatePatientDto } from './dto/update-patient.dto'
 
 /**
 *   Servicio que gestiona pacientes en la base de datos.

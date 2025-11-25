@@ -1,19 +1,10 @@
+// Importamos el tipo de dato 'enum' desde el archivo patient.entity
+import { gender } from "../entities/patient.entity"
+
 // La dependencia 'class-validator' nos ayuda a validar los atributos de una clase usando decoradores.
-import {IsString,IsNotEmpty,IsEnum, isEnum} from 'class-validator';
+import { IsString,IsNotEmpty,IsEnum, IsDateString } from 'class-validator';
 
-export enum gender{
-    MALE = "Male",
-    FEMALE = 'Female',
-    OTHER = 'Other'
-}
-
-export enum status{
-  ACTIVE = 'Active',
-  FOLLOW_UP = 'Follow Up',
-  INACTIVE = 'Inactive'
-}
-
-// En los decoradoes agregamos las validaciones de cada atributo
+// Esta clase nos permite crear los DTOs de entrada [Cliente --> Servidor].
 export class CreatePatientDto {
     @IsString()
     @IsNotEmpty()
@@ -23,13 +14,11 @@ export class CreatePatientDto {
     @IsNotEmpty()
     last_name: string
 
-    @IsString()
+    @IsDateString()
     @IsNotEmpty()
     birth_date: string
 
     @IsEnum(gender)
+    @IsNotEmpty()
     gender: gender
-
-    @IsEnum(status)
-    status: status
 }
