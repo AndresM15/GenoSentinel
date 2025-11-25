@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common'
-import { PatientService } from './patient.service'
+import { PatientService } from './impl/patient.service'
 import { PatientController } from './patient.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Patient } from './entities/patient.entity'
