@@ -142,8 +142,24 @@ export class PatientService implements IPatientService{
         return responseDto
     }
     
-    deactivatePatient(id: string): Promise<status> {
-        throw new Error('Method not implemented.');
+    async deactivatePatient(id: string): Promise<status> {
+
+        // 1.) Consultamos un paciente por su id
+        const patient =  await this.patientRepository.findOne({where:{id}})
+
+        // 2.) Manejo de excepciones
+        if(!patient){
+            throw new HttpException("Paciente no encontrado" , HttpStatus.NOT_FOUND)
+        }
+
+        // 3.) Cambiar el status a active
+        patient.status = status.INACTIVE
+
+        // 4.) Guardar los cambios en la base de datos
+        await this.patientRepository.save(patient)
+
+        // 5.) Retornamos el nuevo estado
+        return patient.status
     }
 
 }

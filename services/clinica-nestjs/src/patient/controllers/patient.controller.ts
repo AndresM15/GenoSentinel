@@ -31,4 +31,9 @@ export class PatientController {
         return this.patientService.updatePatient(id,UpdatePatientDto)
 
     }
+
+    @Put(':id/deactivate') // Ruta para desactivar paciente
+    deactivate(@Param('id') id: string){
+        return this.patientService.deactivatePatient(id)
+    }
 }
