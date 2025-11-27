@@ -8,6 +8,7 @@ import { IPatientService } from '../interface/patient.service.interface';
 import { PatientResponseDto } from 'src/patient/dto/response-patient.dto';
 import { UpdatePatientDto } from 'src/patient/dto/update-patient.dto';
 import { first } from 'rxjs';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class PatientService implements IPatientService{
@@ -115,9 +116,32 @@ export class PatientService implements IPatientService{
             return responseDto 
     }
 
-    updatePatient(id: string, updatePatient: UpdatePatientDto): Promise<PatientResponseDto> {
-        throw new Error('Method not implemented.');
+    async updatePatient(id: string, updatePatient: UpdatePatientDto): Promise<PatientResponseDto> {
+        // 1.) Envía los datos para actualizar paciente
+        await this.patientRepository.update(id, updatePatient)
+
+        // 2.) Obtener el paciente actualizado
+        const updatedPatient = await this.patientRepository.findOne({where:{id}})
+
+        // 3.) Verifica que el paciente ya existe
+        if(!updatedPatient){
+            throw new HttpException('Paciente no encontrado' , HttpStatus.NOT_FOUND)
+        }
+
+        // 4.) Mapear manualmente los DTOs a entidad
+        const responseDto: PatientResponseDto = {
+            id: updatedPatient.id,
+            first_name: updatedPatient.first_name,
+            last_name: updatedPatient.last_name,
+            birth_date: new Date(updatedPatient.birth_date).toISOString(),
+            gender: updatedPatient.gender,
+            status: updatedPatient.status
+        }
+
+        // 5.) Retornamos el DTO de salida mapeados
+        return responseDto
     }
+    
     deactivatePatient(id: string): Promise<status> {
         throw new Error('Method not implemented.');
     }

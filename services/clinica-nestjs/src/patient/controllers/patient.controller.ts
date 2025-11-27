@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { PatientService } from '../services/impl/patient.service';
 import { CreatePatientDto } from '../dto/create-patient.dto';
+import { UpdatePatientDto } from '../dto/update-patient.dto';
 
 @Controller('patient')
 export class PatientController {
@@ -15,13 +16,19 @@ export class PatientController {
 
     @Get()
     findAll(){
-        return this.patientService.findAllPatients();
+        return this.patientService.findAllPatients()
     }
 
     // @Param: Extrae el id de 'uuid'
     @Get(':id')
     findOneBy(@Param('id') id: string){
-        return this.patientService.findOneByPatient(id);
+        return this.patientService.findOneByPatient(id)
+
+    }
+
+    @Put(':id') // Parametro de ruta dinámico ':' (Cambia segun la solicitud del cliente)
+    update(@Param('id') id: string, @Body() UpdatePatientDto: UpdatePatientDto){
+        return this.patientService.updatePatient(id,UpdatePatientDto)
 
     }
 }
