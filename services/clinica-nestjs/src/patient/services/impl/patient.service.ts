@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Patient, status } from '../../entities/patient.entity';
+import { gender, Patient, status } from '../../entities/patient.entity';
 import { CreatePatientDto } from '../../dto/create-patient.dto';
 import { IPatientService } from '../interface/patient.service.interface';
 import { PatientResponseDto } from 'src/patient/dto/response-patient.dto';
@@ -20,8 +20,9 @@ export class PatientService implements IPatientService{
             // 1.) Extraer la información del paciente
             const {first_name,last_name,birth_date,gender} = createPatientDto
             
-            // 2.) Convertimos o transformamos los pertinentes del paciente
-            const transformer_date = new Date(birth_date)
+              // 2.) Convertir o transoformar los datos pertinentes.
+            const transformer_date = new Date(birth_date);
+
 
             // 3.) Crear el objeto que se va a guardar en base de datos.
             const patient: Patient = this.patientRepository.create({
@@ -83,15 +84,37 @@ export class PatientService implements IPatientService{
             console.log("Mostrar Pacientes",responseDto)
             return responseDto
 
+            // Manejo de excepciones en caso de que ningun paciente esté registrado.
         }catch(error){
-            throw new HttpException("La lista de pacientes está vacia", HttpStatus.NOT_FOUND)
+            throw new HttpException('La lista de pacientes está vacia', HttpStatus.NOT_FOUND)
         }
     }
     
 
-    findOneByPatient(id: string): Promise<PatientResponseDto> {
-        throw new Error('Method not implemented.');
+    async findOneByPatient(id: string): Promise<PatientResponseDto> {
+
+            // 1.) Obtener un paciente especifico guardado en la base de datos
+            const savePatient = await this.patientRepository.findOne( { where:{ id } } )
+
+            // 2.) Manejo de excepciones en caso de que el paciente no exista
+            if(!savePatient){
+                throw new HttpException('Paciente no encontrado', HttpStatus.NOT_FOUND)
+            }
+
+           // 3.) Mapeamos el DTO a entidad  
+            const responseDto: PatientResponseDto = {
+                id: savePatient.id,
+                first_name: savePatient.first_name,
+                last_name: savePatient.last_name,
+                birth_date: new Date(savePatient.birth_date).toISOString(),
+                gender: savePatient.gender,
+                status: savePatient.status
+            }
+
+            // 4.) Retornamos el DTO de respuesta ya mapeado
+            return responseDto 
     }
+
     updatePatient(id: string, updatePatient: UpdatePatientDto): Promise<PatientResponseDto> {
         throw new Error('Method not implemented.');
     }
