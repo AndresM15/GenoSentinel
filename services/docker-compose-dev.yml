@@ -73,7 +73,7 @@ services:
       # Volumes
       # This will create a named volume to persist MySQL data
       volumes:
-        - clinica_data:/var/lib/mysql
+        - clinica_data:/var/lib/mysql   # El nombre 'clinica-data' debe coincidir exactamente
 
       # Healthcheck
       # This will check if the container is healthy (Listening to the port)

@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PatientModule } from './patient/patient.module';
 
 /* isGlobal: Las variables de entorno esten disponibles en toda la aplicación o solo en un módulo
  * envFilePath: Archivo de variables de entorno
@@ -13,7 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal:true,envFilePath:`${process.env.NODE_ENV}.env`}),
-        // Import the TypeOrmModule globally
+    // Import the TypeOrmModule globally
     // It must be async, so we can inject the
     // ConfigService to access the envs
     
@@ -66,6 +67,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true,
       }),
     }),
+        PatientModule,
   ],
   controllers: [AppController],
   providers: [AppService],
