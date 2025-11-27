@@ -10,6 +10,21 @@ import { UpdatePatientDto } from 'src/patient/dto/update-patient.dto';
 import { first } from 'rxjs';
 import { stringify } from 'querystring';
 
+/**
+ * PatientService
+ * 
+ * Maneja toda la lógica CRUD relacionada con los pacientes.
+ * Se encarga de:
+ *  - Crear un paciente (createPatient)
+ *  - Obtener todos los pacientes (findAllPatients)
+ *  - Consultar un paciente específico (findOneByPatient)
+ *  - Actualizar un paciente (updatePatient)
+ *  - Desactivar un paciente (deactivatePatient)
+ * 
+ * Actua como capa intermedia entre el controller (endpoints) y el repositorio de TypeORM.
+ * Aquí se implementa la lógica de negocio y el mapeo de DTOs.
+ */
+
 @Injectable()
 export class PatientService implements IPatientService{
     constructor(
@@ -82,7 +97,6 @@ export class PatientService implements IPatientService{
             }        
 
             // Retornamos la lista de pacientes ya mapeada a DTOs
-            console.log("Mostrar Pacientes",responseDto)
             return responseDto
 
             // Manejo de excepciones en caso de que ningun paciente esté registrado.
@@ -153,7 +167,7 @@ export class PatientService implements IPatientService{
         }
 
         // 3.) Cambiar el status a active
-        patient.status = status.INACTIVE
+        patient.status = status.INACTIVAE
 
         // 4.) Guardar los cambios en la base de datos
         await this.patientRepository.save(patient)

@@ -9,8 +9,8 @@ export enum gender {
 // Creación de una variable tipo "enum" llamada status.
 export enum status {
   ACTIVE = 'Active',
-  FOLLOW_UP = 'FollowUp',
-  INACTIVE = 'Inactive',
+  FOLLOW_UP = 'Follow_Up', //Seguimiento
+  INACTIVAE = 'Inactive'
 }
 
 @Entity('patients')
