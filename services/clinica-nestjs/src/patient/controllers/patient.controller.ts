@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import { PatientService } from '../services/impl/patient.service';
+import { PatientService } from '../services/patient.service';
 import { CreatePatientDto } from '../dto/create-patient.dto';
 import { UpdatePatientDto } from '../dto/update-patient.dto';
 
@@ -13,9 +13,7 @@ import { UpdatePatientDto } from '../dto/update-patient.dto';
 
 @Controller('patient')
 export class PatientController {
-    constructor(
-        private patientService: PatientService
-    ){}
+    constructor(private readonly patientService: PatientService){}
 
     /** 
      * create
@@ -25,7 +23,7 @@ export class PatientController {
      * Retorna el DTO de salida PatientResponseDto.
      */
 
-    @Post()
+    @Post('create-patient')
     create(@Body() createPatientDTO: CreatePatientDto){
         return this.patientService.createPatient(createPatientDTO)
     }
@@ -37,7 +35,7 @@ export class PatientController {
      * Retorna un arreglo de PatientResponseDto.
      */
 
-    @Get()
+    @Get('find-patient')
     findAll(){
         return this.patientService.findAllPatients()
     }
@@ -49,7 +47,7 @@ export class PatientController {
      * Retorna el DTO de salida PatientResponseDto.
      */
 
-    @Get(':id')
+    @Get('find-patient/:id')
     findOneBy(@Param('id') id: string){    // @param id: Extrae el id de 'uuid'
         return this.patientService.findOneByPatient(id)
     }
@@ -63,7 +61,7 @@ export class PatientController {
      * Retorna el DTO de salida PatientResponseDto con los datos actualizados.
      */
 
-    @Put(':id') // Parametro de ruta dinámico ':' (Cambia segun la solicitud del cliente)
+    @Put('update-patient/:id') // Parametro de ruta dinámico ':' (Cambia segun la solicitud del cliente)
     update(@Param('id') id: string, @Body() UpdatePatientDto: UpdatePatientDto){
         return this.patientService.updatePatient(id,UpdatePatientDto)
 
@@ -71,12 +69,11 @@ export class PatientController {
 
     /**
      * deactivate
-     * Endpoint: PUT /patient/:id/follow_up
-     * Permite desactivar un paciente cambiando su estado a FOLLOW UP.
-     * @param id - UUID del paciente a desactivar.
-     * Retorna el nuevo estado del paciente (status).
-     */
-    @Put(':id/deactive') 
+     * Endpoint: PUT /patient/:id/deactive
+     * Cambia el estado del paciente a INACTIVAE.
+    */
+
+    @Put('deactivate-patient/:id') 
     deactivate(@Param('id') id: string){
         return this.patientService.deactivatePatient(id)
     }

@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PatientModule } from './patient/patient.module';
+import { TumorTypeModule } from './tumor-type/tumor-type.module';
+import { ClinicalRecordModule } from './clinical-record/clinical-record.module';
 
 /* isGlobal: Las variables de entorno esten disponibles en toda la aplicación o solo en un módulo
  * envFilePath: Archivo de variables de entorno
@@ -68,6 +70,8 @@ import { PatientModule } from './patient/patient.module';
       }),
     }),
         PatientModule,
+        TumorTypeModule,
+        ClinicalRecordModule
   ],
   controllers: [AppController],
   providers: [AppService],

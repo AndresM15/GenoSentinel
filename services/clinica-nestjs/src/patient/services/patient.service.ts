@@ -2,13 +2,11 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { gender, Patient, status } from '../../entities/patient.entity';
-import { CreatePatientDto } from '../../dto/create-patient.dto';
-import { IPatientService } from '../interface/patient.service.interface';
+import { gender, Patient, status } from '../entities/patient.entity';
+import { CreatePatientDto } from '../dto/create-patient.dto';
 import { PatientResponseDto } from 'src/patient/dto/response-patient.dto';
 import { UpdatePatientDto } from 'src/patient/dto/update-patient.dto';
-import { first } from 'rxjs';
-import { stringify } from 'querystring';
+
 
 /**
  * PatientService
@@ -26,12 +24,11 @@ import { stringify } from 'querystring';
  */
 
 @Injectable()
-export class PatientService implements IPatientService{
+export class PatientService{
     constructor(
-        @InjectRepository(Patient)
-        private patientRepository: Repository<Patient>
+        @InjectRepository(Patient) private readonly patientRepository: Repository<Patient>
     ){}
-    async createPatient(createPatientDto: CreatePatientDto): Promise<PatientResponseDto> {
+    async createPatient(createPatientDto: CreatePatientDto){
         try{
             // 1.) Extraer la información del paciente
             const {first_name,last_name,birth_date,gender} = createPatientDto
@@ -70,7 +67,7 @@ export class PatientService implements IPatientService{
         }
     }
 
-    async findAllPatients(): Promise<PatientResponseDto[]> {
+    async findAllPatients() {
         try{
             // 1.) Obtener los pacientes guardados en la base de datos
             const patients = await this.patientRepository.find()
@@ -78,12 +75,10 @@ export class PatientService implements IPatientService{
             // 2.) Lista vacía para almacenar los DTOs
             const responseDto: PatientResponseDto[] = [];
 
-            if(responseDto)
-
             // 3.) Iterar y mapear cada paciente a DTO
             for(let i = 0; i < patients.length; i++){
                 const p = patients[i]
-                const dtoOut: PatientResponseDto = {
+                const dto: PatientResponseDto = {
                     id: p.id,
                     first_name: p.first_name,
                     last_name: p.last_name,
@@ -93,7 +88,7 @@ export class PatientService implements IPatientService{
                 };
 
                 // Agregamos el DTO mapeado a la lista que se devolverá al cliente
-                responseDto.push(dtoOut)
+                responseDto.push(dto)
             }        
 
             // Retornamos la lista de pacientes ya mapeada a DTOs
@@ -105,8 +100,7 @@ export class PatientService implements IPatientService{
         }
     }
     
-
-    async findOneByPatient(id: string): Promise<PatientResponseDto> {
+    async findOneByPatient(id: string) {
 
             // 1.) Obtener un paciente especifico guardado en la base de datos
             const savePatient = await this.patientRepository.findOne( { where:{ id } } )
@@ -130,7 +124,7 @@ export class PatientService implements IPatientService{
             return responseDto 
     }
 
-    async updatePatient(id: string, updatePatient: UpdatePatientDto): Promise<PatientResponseDto> {
+    async updatePatient(id: string, updatePatient: UpdatePatientDto) {
         // 1.) Envía los datos para actualizar paciente
         await this.patientRepository.update(id, updatePatient)
 
@@ -156,7 +150,7 @@ export class PatientService implements IPatientService{
         return responseDto
     }
     
-    async deactivatePatient(id: string): Promise<status> {
+    async deactivatePatient(id: string) {
 
         // 1.) Consultamos un paciente por su id
         const patient =  await this.patientRepository.findOne({where:{id}})
@@ -167,7 +161,7 @@ export class PatientService implements IPatientService{
         }
 
         // 3.) Cambiar el status a active
-        patient.status = status.INACTIVAE
+        patient.status = status.INACTIVAE;
 
         // 4.) Guardar los cambios en la base de datos
         await this.patientRepository.save(patient)
@@ -175,5 +169,4 @@ export class PatientService implements IPatientService{
         // 5.) Retornamos el nuevo estado
         return patient.status
     }
-
 }
