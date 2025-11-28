@@ -6,9 +6,8 @@ import { CreateTumorTypeDto } from "../dto/create-tumor-type.dto";
 import { ResponseTumorTypeDto } from "../dto/response-tumor-type.dto";
 
 /**
- * 
- * 
- * 
+ * Servicio encargado de gestionar los tipos de tumor.
+ * Permite crear, listar y consultar tipos de tumor desde la base de datos.
  */
 
 @Injectable()
@@ -41,6 +40,7 @@ export class TumorTypeService {
         // Retornar el DTO de salida con los datos del tumor-type guardado
         return responseDto;
 
+        // 5.) Manejo de errores o excepciones
         }catch(error){
             throw new HttpException('Error al guardar el tipo de tumor', HttpStatus.BAD_REQUEST);
         }
@@ -94,5 +94,4 @@ export class TumorTypeService {
         // 5.) Retornamos el DTO de respuesta ya mapeado
         return responseDto;
     }
-
 }
