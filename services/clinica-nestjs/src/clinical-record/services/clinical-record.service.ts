@@ -71,15 +71,41 @@ export class ClinicalRecordService {
                     treatmentProtocol: c.treatmentProtocol
                 }
 
-                // Agregamos el DTO mapeado a la lista que se devolverá al cliente
+                // 4.)Agregamos el DTO mapeado a la lista que se devolverá al cliente
                 responseDto.push(dto)
             }
 
-            // Retornamos la lista de pacientes ya mapeada a DTOs
+            // 5.) Retornamos la lista de las historias clinicas ya mapeada a DTOs
             return responseDto
 
+            // 6.) Manejo de excepciones
         }catch(error){
-            throw new HttpException('La lista de pacientes está vacia', HttpStatus.NOT_FOUND);
+            throw new HttpException('La lista de las historias clinicas estan vacias', HttpStatus.NOT_FOUND);
         }
+    }
+
+    async findByOneClinicalRecord(id: string){
+        
+        // 1.) Obtener un paciente especifico guardado en la base de datos
+        const saveClinicalRecord = await this.clinicalRecordRepository.findOne( { where:{ id } } )
+
+        // 2.) Manejo de excepciones en caso de que el paciente no exista
+        if(!saveClinicalRecord){
+            throw new HttpException('Historial clinico no encontrado', HttpStatus.BAD_REQUEST)
+        }
+
+        // 3.) Mapeamos el DTO a entidad  
+
+        const responseDto: ResponseClinicalRecordDto = {
+                id: saveClinicalRecord.id,
+                patientId: saveClinicalRecord.patientId,
+                tumorTypeId: saveClinicalRecord.tumorTypeId,
+                diagnos_is_Date: saveClinicalRecord.diagnos_is_Date.toISOString(),
+                stage: saveClinicalRecord.stage,
+                treatmentProtocol: saveClinicalRecord.treatmentProtocol
+        }
+
+        // 4.) Retornamos el DTO de respuesta ya mapeado
+        return responseDto
     }
 }

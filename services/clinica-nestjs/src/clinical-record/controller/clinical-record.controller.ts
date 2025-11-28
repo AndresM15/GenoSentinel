@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { ClinicalRecordService } from "../services/clinical-record.service";
 import { CreateClinicalRecordDto } from "../dto/create-clinical-record.dto";
 
@@ -14,5 +14,10 @@ export class ClinicalRecordController {
     @Get('find-clinical-record')
     findAll(){
         return this.clinicalRecordService.findAllClinicalRecords()
+    }
+
+    @Get('find-clinical-record/:id')
+    findByOne(@Param('id') id: string){
+        return this.clinicalRecordService.findByOneClinicalRecord(id)
     }
 }
