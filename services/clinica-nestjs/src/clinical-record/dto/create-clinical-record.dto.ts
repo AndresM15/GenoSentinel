@@ -12,7 +12,7 @@ export class CreateClinicalRecordDto {
 
     @IsDateString()
     @IsNotEmpty()
-    diagnosisDate: string
+    diagnos_is_Date: string
 
     @IsEnum(cancerStage)
     @IsNotEmpty()

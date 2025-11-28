@@ -4,7 +4,7 @@ export class ResponseClinicalRecordDto {
     id: string
     patientId: string
     tumorTypeId: number 
-    diagnosisDate: string
+    diagnos_is_Date: string
     stage: cancerStage
     treatmentProtocol: string
 }

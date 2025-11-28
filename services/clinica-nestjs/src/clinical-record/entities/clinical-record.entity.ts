@@ -1,5 +1,5 @@
-import { Patient } from "src/patient/entities/patient.entity";
-import { TumorType } from "src/tumor-type/entities/tumor-type.entity";
+import { Patient } from "../../patient/entities/patient.entity";
+import { TumorType } from "../../tumor-type/entities/tumor-type.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 export enum cancerStage {
@@ -24,7 +24,7 @@ export class ClinicalRecord {
     tumorTypeId: number;
 
     @Column()
-    diagnosisDate: Date
+    diagnos_is_Date: Date
 
     @Column({ type: 'enum', enum: cancerStage })
     stage: cancerStage

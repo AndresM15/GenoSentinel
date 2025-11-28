@@ -4,7 +4,7 @@ import { cancerStage } from "../entities/clinical-record.entity"
 export class UpdateClinicalRecordDto{
     @IsDateString()
     @IsOptional()
-    diagnosisDate: string
+    diagnos_is_Date: string
     
     @IsEnum(cancerStage)
     @IsOptional()
