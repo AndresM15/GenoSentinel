@@ -10,6 +10,14 @@ export enum cancerStage {
   IV = 'IV'
 }
 
+/**
+ * Entidad ClinicalRecord:
+ *  - Representa el historial clínico de un paciente.
+ *  - Relaciona un paciente con un tipo de tumor.
+ *  - Incluye fecha de diagnóstico, etapa del cáncer y protocolo de tratamiento.
+ *  - Define relaciones ManyToOne con Patient y TumorType.
+ */
+
 @Entity()
 export class ClinicalRecord {
     @PrimaryGeneratedColumn('uuid')

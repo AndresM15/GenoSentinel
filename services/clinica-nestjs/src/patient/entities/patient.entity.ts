@@ -13,6 +13,13 @@ export enum status {
   INACTIVAE = 'Inactive'
 }
 
+/**
+ * Entidad Patient:
+ * - Representa los datos personales del paciente.
+ * - Campos: id (UUID), nombres, fecha de nacimiento, género y estado.
+ * - El campo `status` es un enum con valor por defecto ACTIVE.
+ */
+
 @Entity('patients')
 export class Patient {
   @PrimaryGeneratedColumn('uuid')

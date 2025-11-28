@@ -5,6 +5,12 @@ import { ConfigModule } from '@nestjs/config';
 import { ClinicalRecord } from './entities/clinical-record.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+/**
+ * Módulo de ClinicalRecord.
+ * Registra la entidad, el controlador y el servicio necesarios
+ * para manejar los historiales clínicos dentro de la aplicación.
+ */
+
 @Module({
   imports: [TypeOrmModule.forFeature([ClinicalRecord])],
   controllers: [ClinicalRecordController],

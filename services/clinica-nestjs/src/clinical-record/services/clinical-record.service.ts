@@ -6,6 +6,16 @@ import { CreateClinicalRecordDto } from "../dto/create-clinical-record.dto";
 import { ResponseClinicalRecordDto } from "../dto/response-clinical-record.dto";
 import { UpdateClinicalRecordDto } from "../dto/update-clinical-record.dto";
 
+/**
+ * Servicio encargado de gestionar los historiales clínicos:
+ *  - Crear un historial clínico
+ *  - Listar todos los historiales
+ *  - Buscar un historial por ID
+ *  - Actualizar parcialmente un historial
+ * 
+ * Implementa conversión de fechas, mapeo a DTOs y manejo básico de errores.
+ */
+
 @Injectable()
 export class ClinicalRecordService {
     constructor(
@@ -120,7 +130,7 @@ export class ClinicalRecordService {
                 throw new HttpException('Historial clinico no encontrado' , HttpStatus.NOT_FOUND)
             }
 
-             // 4.) Actualizar manualmente SOLO los campos enviados
+             // 4.) Actualizar manualmente solo los campos enviados
             if (updateClinicalRecordDto.diagnos_is_Date !== undefined) {
                 clinicalRecord.diagnos_is_Date = new Date(updateClinicalRecordDto.diagnos_is_Date)
             }
