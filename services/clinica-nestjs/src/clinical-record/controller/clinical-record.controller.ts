@@ -10,4 +10,9 @@ export class ClinicalRecordController {
     create(@Body() createClinicalRecordDto: CreateClinicalRecordDto){
         return this.clinicalRecordService.createClinicalRecord(createClinicalRecordDto)
     }
+
+    @Get('find-clinical-record')
+    findAll(){
+        return this.clinicalRecordService.findAllClinicalRecords()
+    }
 }

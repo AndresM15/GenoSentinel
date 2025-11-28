@@ -49,4 +49,37 @@ export class ClinicalRecordService {
             throw new HttpException('Error al guardar el historial clínico', HttpStatus.BAD_REQUEST);
         }
     }
+
+    async findAllClinicalRecords(){
+        try{
+
+            // 1.) Obtener los historiales clinicos guardados en la base de datos
+            const clinicalRecords = await this.clinicalRecordRepository.find()
+
+            // 2.) Inicializar una lista vacía para almacenar los DTOs
+            const responseDto: ResponseClinicalRecordDto[] = [];
+
+            // 3.) Iterar y mapear cada paciente a DTO
+            for(let i = 0; i < clinicalRecords.length; i++){
+                const c = clinicalRecords[i]
+                const dto: ResponseClinicalRecordDto = {
+                    id: c.id,
+                    patientId: c.patientId,
+                    tumorTypeId: c.tumorTypeId,
+                    diagnos_is_Date: new Date(c.diagnos_is_Date).toISOString(),
+                    stage: c.stage,
+                    treatmentProtocol: c.treatmentProtocol
+                }
+
+                // Agregamos el DTO mapeado a la lista que se devolverá al cliente
+                responseDto.push(dto)
+            }
+
+            // Retornamos la lista de pacientes ya mapeada a DTOs
+            return responseDto
+
+        }catch(error){
+            throw new HttpException('La lista de pacientes está vacia', HttpStatus.NOT_FOUND);
+        }
+    }
 }
