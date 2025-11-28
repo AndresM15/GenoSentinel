@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { TumorTypeService } from "./services/impl/tumor-type.service";
+import { TumorTypeService } from "./services/tumor-type.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TumorTypeController } from "./controllers/tumor-type.controller";
 import { TumorType } from "./entities/tumor-type.entity";

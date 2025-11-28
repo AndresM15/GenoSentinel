@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity("tumor-types")
 export class TumorType {
     @PrimaryGeneratedColumn("increment")
     id: number
