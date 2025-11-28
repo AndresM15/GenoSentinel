@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { ClinicalRecordService } from "../services/clinical-record.service";
 import { CreateClinicalRecordDto } from "../dto/create-clinical-record.dto";
+import { UpdateClinicalRecordDto } from "../dto/update-clinical-record.dto";
 
 @Controller('clinical-record')
 export class ClinicalRecordController {
@@ -20,4 +21,11 @@ export class ClinicalRecordController {
     findByOne(@Param('id') id: string){
         return this.clinicalRecordService.findByOneClinicalRecord(id)
     }
+
+    @Patch('update-clinical-record/:id')
+    update(@Param('id') id: string , @Body() updateClinicalRecordDto: UpdateClinicalRecordDto){
+        return this.clinicalRecordService.updateClinicalRecord(id,updateClinicalRecordDto)
+    }
+
+    
 }

@@ -4,6 +4,7 @@ import { ClinicalRecord } from "../entities/clinical-record.entity";
 import { Repository } from "typeorm";
 import { CreateClinicalRecordDto } from "../dto/create-clinical-record.dto";
 import { ResponseClinicalRecordDto } from "../dto/response-clinical-record.dto";
+import { UpdateClinicalRecordDto } from "../dto/update-clinical-record.dto";
 
 @Injectable()
 export class ClinicalRecordService {
@@ -86,10 +87,10 @@ export class ClinicalRecordService {
 
     async findByOneClinicalRecord(id: string){
         
-        // 1.) Obtener un paciente especifico guardado en la base de datos
+        // 1.) Obtener una historia clinica en especifico guardado en la base de datos
         const saveClinicalRecord = await this.clinicalRecordRepository.findOne( { where:{ id } } )
 
-        // 2.) Manejo de excepciones en caso de que el paciente no exista
+        // 2.) Manejo de excepciones en caso de que el historial clinico no exista
         if(!saveClinicalRecord){
             throw new HttpException('Historial clinico no encontrado', HttpStatus.BAD_REQUEST)
         }
@@ -107,5 +108,45 @@ export class ClinicalRecordService {
 
         // 4.) Retornamos el DTO de respuesta ya mapeado
         return responseDto
+    }
+
+    async updateClinicalRecord(id: string, updateClinicalRecordDto : UpdateClinicalRecordDto){
+
+            // 1. Buscar el historial clínico
+            const clinicalRecord = await this.clinicalRecordRepository.findOne({where: { id }});
+
+             // 3.) Verifica que el historial clinico ya existe
+            if(!clinicalRecord ){
+                throw new HttpException('Historial clinico no encontrado' , HttpStatus.NOT_FOUND)
+            }
+
+             // 4.) Actualizar manualmente SOLO los campos enviados
+            if (updateClinicalRecordDto.diagnos_is_Date !== undefined) {
+                clinicalRecord.diagnos_is_Date = new Date(updateClinicalRecordDto.diagnos_is_Date)
+            }
+
+            if (updateClinicalRecordDto.stage !== undefined) {
+                clinicalRecord.stage = updateClinicalRecordDto.stage
+            }
+
+            if (updateClinicalRecordDto.treatmentProtocol !== undefined) {
+                clinicalRecord.treatmentProtocol = updateClinicalRecordDto.treatmentProtocol
+            }
+
+            // 5.) Guardar cambios en la BD
+            const savedRecord = await this.clinicalRecordRepository.save(clinicalRecord)
+
+            // 6.) Mapeamos el DTO de respuesta
+            const response: ResponseClinicalRecordDto = {
+                id: savedRecord.id,
+                patientId: savedRecord.patientId,
+                tumorTypeId: savedRecord.tumorTypeId,
+                diagnos_is_Date: savedRecord.diagnos_is_Date.toISOString(),
+                stage: savedRecord.stage,
+                treatmentProtocol: savedRecord.treatmentProtocol
+            };
+
+            // Retornamos el DTO de respuesta
+            return response;
     }
 }
