@@ -28,14 +28,14 @@ export class PatientService{
     constructor(
         @InjectRepository(Patient) private readonly patientRepository: Repository<Patient>
     ){}
+    
     async createPatient(createPatientDto: CreatePatientDto){
         try{
             // 1.) Extraer la información del paciente
             const {first_name,last_name,birth_date,gender} = createPatientDto
             
-              // 2.) Convertir o transoformar los datos pertinentes.
+            // 2.) Convertir o transoformar los datos pertinentes.
             const transformer_date = new Date(birth_date);
-
 
             // 3.) Crear el objeto que se va a guardar en base de datos.
             const patient: Patient = this.patientRepository.create({
