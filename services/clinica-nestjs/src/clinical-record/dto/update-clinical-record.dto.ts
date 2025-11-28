@@ -1,4 +1,4 @@
 
-export class UpdateClinicalRecord{
+export class UpdateClinicalRecordDto{
     
 }
