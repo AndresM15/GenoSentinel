@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 import { TumorTypeService } from "../services/tumor-type.service";
 import { CreateTumorTypeDto } from "../dto/create-tumor-type.dto";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -13,5 +13,13 @@ export class TumorTypeController {
         return this.tumorTypeService.createTumorType(createTumorTypeDto);
     }
 
-    
+    @Get('find-tumor-type')
+    findAll(){
+        return this.tumorTypeService.findAllTumorTypes();
+    }
+
+    @Get('find-tumor-type/:id')
+    findOneBy(@Param('id')id: number){
+        return this.tumorTypeService.findOneByTumorType(id);
+    }   
 }

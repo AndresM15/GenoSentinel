@@ -72,7 +72,7 @@ export class PatientService{
             // 1.) Obtener los pacientes guardados en la base de datos
             const patients = await this.patientRepository.find()
 
-            // 2.) Lista vacía para almacenar los DTOs
+            // 2.) Inicializar una lista vacía para almacenar los DTOs
             const responseDto: PatientResponseDto[] = [];
 
             // 3.) Iterar y mapear cada paciente a DTO
