@@ -1,0 +1,8 @@
+/* src/app/shared/components/layout/layout.css */
+
+/* Cuando el enlace está activo, cámbialo a azul */
+.list-group-item.active {
+    background-color: #0d6efd !important; /* Azul Bootstrap */
+    border-color: #0d6efd !important;
+    color: white !important;
+}

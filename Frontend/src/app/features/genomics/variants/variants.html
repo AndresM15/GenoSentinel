@@ -1,0 +1,132 @@
+<div class="container-fluid p-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Librería de Variantes</h2>
+    
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createVariantModal">
+      <i class="bi bi-plus-lg"></i> Nueva Variante
+    </button>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Gen</th>
+            <th>Ubicación</th>
+            <th>Cambio (Ref > Alt)</th>
+            <th>Impacto</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="5" class="text-center p-4">
+              <div class="spinner-border text-primary" role="status"></div>
+            </td>
+          </tr>
+
+          <tr *ngIf="!isLoading && variants?.length === 0">
+            <td colspan="5" class="text-center p-4 text-muted">
+              No hay variantes registradas.
+            </td>
+          </tr>
+
+          <tr *ngFor="let variant of variants">
+            <td>
+              <span class="badge bg-secondary">{{ variant.gene_symbol || variant.gene }}</span>
+            </td>
+            <td>
+              <strong>{{ variant.chromosome }}</strong> : {{ variant.position }}
+            </td>
+            <td>
+              <code>{{ variant.reference_base }}</code> 
+              <i class="bi bi-arrow-right-short text-muted"></i> 
+              <code>{{ variant.alternate_base }}</code>
+            </td>
+            <td>
+              <span class="badge" 
+                [ngClass]="{
+                  'bg-danger': variant.impact === 'High' || variant.impact === 'Nonsense',
+                  'bg-warning text-dark': variant.impact === 'Moderate' || variant.impact === 'Missense',
+                  'bg-success': variant.impact === 'Low' || variant.impact === 'Synonymous'
+                }">
+                {{ variant.impact }}
+              </span>
+            </td>
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="createVariantModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Registrar Variante Genética</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" #closeModalBtn></button>
+      </div>
+      
+      <div class="modal-body">
+        <form (ngSubmit)="saveVariant()">
+          
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Gen Asociado</label>
+              <select class="form-select" [(ngModel)]="newVariant.gene" name="gene" required>
+                <option value="" disabled selected>Seleccione un Gen...</option>
+                <option *ngFor="let gene of genes" [value]="gene.id">
+                  {{ gene.symbol }}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Cromosoma</label>
+              <input type="text" class="form-control" [(ngModel)]="newVariant.chromosome" name="chromosome" placeholder="Ej: chr17" required>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Posición</label>
+              <input type="number" class="form-control" [(ngModel)]="newVariant.position" name="position" placeholder="Ej: 41277500" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Impacto Clínico</label>
+              <select class="form-select" [(ngModel)]="newVariant.impact" name="impact">
+                <option value="Missense">Missense</option>
+                <option value="Nonsense">Nonsense</option>
+                <option value="Frameshift">Frameshift</option>
+                <option value="High">High</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Base de Referencia</label>
+              <input type="text" class="form-control" [(ngModel)]="newVariant.reference_base" name="ref" placeholder="Ej: A" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Base Alternativa</label>
+              <input type="text" class="form-control" [(ngModel)]="newVariant.alternate_base" name="alt" placeholder="Ej: G" required>
+            </div>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary">Guardar Variante</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
