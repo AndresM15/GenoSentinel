@@ -1,0 +1,88 @@
+<div class="container-fluid p-4">
+    <h2 class="mb-4">Gestión de Reportes Clínicos</h2>
+  
+    <div class="row g-4">
+      
+      <div class="col-md-4">
+        <div class="card shadow-sm border-primary">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Nuevo Reporte</h5>
+          </div>
+          <div class="card-body">
+            <form (ngSubmit)="createReport()">
+              
+              <div class="mb-3">
+                <label class="form-label">ID del Paciente (UUID)</label>
+                <input type="text" class="form-control" 
+                       [(ngModel)]="newReport.patient_id" name="patient_id" 
+                       placeholder="Ej: a1b2c3d4-..." required>
+                <div class="form-text">Debe existir en el módulo de Clínica.</div>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">Variante Detectada</label>
+                <select class="form-select" [(ngModel)]="newReport.variant" name="variant" required>
+                  <option value="" disabled selected>Seleccione una variante...</option>
+                  <option *ngFor="let v of variants" [value]="v.id">
+                    {{ v.gene_symbol }} - {{ v.impact }} ({{ v.position }})
+                  </option>
+                </select>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">Frecuencia Alélica (VAF)</label>
+                <input type="text" class="form-control" 
+                       [(ngModel)]="newReport.allele_frequency" name="vaf" 
+                       placeholder="Ej: 0.1500" required>
+              </div>
+  
+              <div *ngIf="errorMessage" class="alert alert-danger small">
+                  {{ errorMessage }}
+              </div>
+  
+              <button type="submit" class="btn btn-primary w-100">Guardar Reporte</button>
+            </form>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-md-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-list-check"></i> Historial de Reportes</h5>
+          </div>
+          <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Paciente ID</th>
+                  <th>Variante</th>
+                  <th>VAF</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="isLoading">
+                  <td colspan="4" class="text-center p-4">
+                      <div class="spinner-border text-primary"></div>
+                  </td>
+                </tr>
+                <tr *ngFor="let r of reports">
+                  <td>{{ r.detection_date }}</td>
+                  <td><small class="text-muted">{{ r.patient_id }}</small></td>
+                  <td>
+                      <span class="badge bg-info text-dark">
+                          {{ r.variant_details?.gene_symbol }}
+                      </span>
+                      <small class="ms-1">{{ r.variant_details?.impact }}</small>
+                  </td>
+                  <td>{{ r.allele_frequency }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>

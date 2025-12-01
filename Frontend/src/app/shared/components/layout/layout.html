@@ -1,0 +1,43 @@
+<div class="d-flex" id="wrapper">
+    <div class="bg-dark text-white border-end" style="width: 250px; min-height: 100vh;">
+      <div class="sidebar-heading p-3 border-bottom fs-4 fw-bold">GenoSentinel</div>
+      <div class="list-group list-group-flush">
+        <a routerLink="/dashboard" class="list-group-item list-group-item-action list-group-item-dark p-3" routerLinkActive="active">
+          <i class="bi bi-speedometer2 me-2"></i> Dashboard
+        </a>
+      
+        <div class="sidebar-heading p-3 text-muted small text-uppercase">Genómica</div>
+        
+        <a routerLink="/genomics/genes" class="list-group-item list-group-item-action list-group-item-dark p-3" routerLinkActive="active">
+          <i class="bi bi-dna me-2 active"></i> Genes
+        </a>
+      
+        <a routerLink="/genomics/variants" class="list-group-item list-group-item-action list-group-item-dark p-3" routerLinkActive="active">
+          <i class="bi bi-virus me-2 "></i> Variantes
+        </a>
+      
+        <a routerLink="/genomics/reports" class="list-group-item list-group-item-action list-group-item-dark p-3" routerLinkActive="active">
+          <i class="bi bi-file-medical me-2"></i> Reportes
+        </a>
+      
+        <div class="sidebar-heading p-3 text-muted small text-uppercase">Clínica</div>
+      
+        <a routerLink="/clinical/patients" class="list-group-item list-group-item-action list-group-item-dark p-3" routerLinkActive="active">
+          <i class="bi bi-people me-2"></i> Pacientes
+        </a>
+      </div>
+    </div>
+  
+    <div id="page-content-wrapper" class="w-100">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-4">
+        <div class="container-fluid">
+          <span class="navbar-brand">Bienvenido, Admin</span>
+          <button class="btn btn-outline-danger btn-sm" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Salir
+          </button>
+        </div>
+      </nav>
+  
+      <router-outlet></router-outlet>
+    </div>
+  </div>

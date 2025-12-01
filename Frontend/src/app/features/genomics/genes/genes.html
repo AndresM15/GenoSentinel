@@ -1,0 +1,81 @@
+
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Catálogo de Genes</h2>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGeneModal">
+        <i class="bi bi-plus-lg"></i> Nuevo Gen
+      </button>
+    </div>
+  
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Símbolo</th>
+              <th>Nombre Completo</th>
+              <th>Resumen Función</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="isLoading">
+              <td colspan="4" class="text-center p-4">
+                <div class="spinner-border text-primary" role="status"></div>
+              </td>
+            </tr>
+  
+            <tr *ngIf="!isLoading && genes.length === 0">
+              <td colspan="4" class="text-center p-4 text-muted">
+                No hay genes registrados.
+              </td>
+            </tr>
+  
+            <tr *ngFor="let gene of genes">
+              <td class="fw-bold">{{ gene.symbol }}</td>
+              <td>{{ gene.full_name }}</td>
+              <td>
+                  {{ gene.function_summary.length > 50 ? (gene.function_summary | slice:0:50) + '...' : gene.function_summary }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="createGeneModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Registrar Nuevo Gen</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" #closeModalBtn></button>        </div>
+        
+        <div class="modal-body">
+          <form (ngSubmit)="saveGene()">
+            
+            <div class="mb-3">
+              <label class="form-label">Símbolo del Gen</label>
+              <input type="text" class="form-control" [(ngModel)]="newGene.symbol" name="symbol" placeholder="Ej: TP53" required>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" [(ngModel)]="newGene.full_name" name="fullName" placeholder="Ej: Tumor Protein 53" required>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Resumen de Función</label>
+              <textarea class="form-control" rows="3" [(ngModel)]="newGene.function_summary" name="summary" placeholder="Describe la función biológica..."></textarea>
+            </div>
+  
+            <div class="d-grid">
+              <!-- Nota: Al hacer click, si es exitoso, el usuario deberá cerrar el modal manualmente o podemos añadir lógica extra. Por ahora simple. -->
+              <button type="submit" class="btn btn-primary">Guardar Gen</button>
+            </div>
+  
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
