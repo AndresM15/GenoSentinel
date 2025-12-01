@@ -20,10 +20,10 @@ public class GatewayController {
     private RestTemplate restTemplate;
 
     // Configuración de URLs (En Docker usarás nombres de servicio, aquí localhost)
-    @Value("${gateway.genomics.url:http://localhost:3000/api/v1}")
+    @Value("${gateway.genomics.url}")
     private String genomicsUrl;
 
-    @Value("${gateway.clinical.url:http://localhost:3001/api/v1}")
+    @Value("${gateway.clinical.url}")
     private String clinicalUrl;
 
     // --- ENRUTAMIENTO GENÓMICA (Django) ---
