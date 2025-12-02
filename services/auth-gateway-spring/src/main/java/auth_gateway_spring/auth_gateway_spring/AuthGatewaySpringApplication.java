@@ -9,5 +9,4 @@ public class AuthGatewaySpringApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(AuthGatewaySpringApplication.class, args);
 	}
-
 }
