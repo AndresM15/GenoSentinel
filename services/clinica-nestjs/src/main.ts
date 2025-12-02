@@ -1,28 +1,20 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'; 
 
-/**
- * ValidationPipe:
- *  - Valida automáticamente los DTOs según sus decoradores (class-validator).
- * 
- * useGlobalPipes:
- *  - Aplica el pipe a **todas** las rutas de la aplicación.
- * 
- * Opciones del ValidationPipe:
- *  transform: true
- *    → Convierte automáticamente los tipos (por ejemplo, strings a números/fechas).
- * 
- *  whitelist: true
- *    → Elimina cualquier propiedad que NO esté declarada en el DTO.
- * 
- *  forbidNonWhitelisted: true
- *    → Si llega una propiedad no permitida, lanza un error en lugar de ignorarla.
- */
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  console.log('--- DEBUG ENV ---');
+  console.log('DB_TYPE:', process.env.CLINICA_DB_TYPE);
+  console.log('DB_HOST:', process.env.CLINICA_DB_HOST_NAME);
+  console.log('-----------------');
+
+  // 1. CONFIGURACIÓN DEL PREFIJO GLOBAL
+  app.setGlobalPrefix('api/v1');
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -32,15 +24,20 @@ async function bootstrap() {
     }),
   );
 
+  // Configuración de Swagger
   const config = new DocumentBuilder()
-    .setTitle('Mi API Clínica')
-    .setDescription('Documentación de GenoSentiel')
+    .setTitle('GenoSentinel - Clínica API')
+    .setDescription('Microservicio de Gestión de Pacientes')
     .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document); // URL -> http://localhost:3000/api
+  SwaggerModule.setup('swagger', app, document); 
 
-  await app.listen(process.env.PORT ?? 3000);
+  
+  // 2. CAMBIO DE PUERTO: 3001
+  await app.listen(process.env.PORT ?? 3001);
+  console.log(`Microservicio Clínica corriendo en: http://localhost:3001/api/v1`);
+  console.log(`Swagger disponible en: http://localhost:3001/swagger`);
 }
 bootstrap();

@@ -6,6 +6,7 @@ import { Dashboard } from './features/dashboard/dashboard';
 import { GenesComponent } from './features/genomics/genes/genes'; // Asegúrate del nombre correcto
 import { VariantsComponent } from './features/genomics/variants/variants'; // Importar componente
 import { ReportsComponent } from './features/genomics/reports/reports';
+import { PatientsComponent } from './features/clinical/patients/patients';
 
 export const routes: Routes = [
 
@@ -38,7 +39,9 @@ export const routes: Routes = [
       { 
         path: 'genomics/reports', 
         component: ReportsComponent },
-      
+        
+        { path: 'clinical/patients', 
+          component: PatientsComponent },
     ]
   },
 

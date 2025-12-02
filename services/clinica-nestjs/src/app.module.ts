@@ -15,7 +15,10 @@ import { ClinicalRecordModule } from './clinical-record/clinical-record.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal:true,envFilePath:`${process.env.NODE_ENV}.env`}),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env', // Busca explícitamente el archivo .env
+    }),
     // Import the TypeOrmModule globally
     // It must be async, so we can inject the
     // ConfigService to access the envs

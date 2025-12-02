@@ -4,3 +4,7 @@ mysqlclient               # Conector para MySQL
 drf-yasg                  # Para generar Swagger 
 python-dotenv             # Para leer variables de entorno (Seguridad)
 django-cors-headers       # Para que Angular pueda conectarse sin errores
+gunicorn                  # Para ejecutar la aplicación en producción
+pymysql                  # Para conectarse a la base de datos MySQL
+django-environ
+requests                 # Para hacer peticiones HTTP

@@ -1,0 +1,87 @@
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>Gestión de Pacientes</h2>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPatientModal">
+        <i class="bi bi-person-plus"></i> Nuevo Paciente
+      </button>
+    </div>
+  
+    <div class="card shadow-sm">
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0 align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>ID (UUID)</th>
+              <th>Nombre Completo</th>
+              <th>Fecha Nacimiento</th>
+              <th>Género</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="isLoading">
+              <td colspan="5" class="text-center p-4">
+                <div class="spinner-border text-primary"></div>
+              </td>
+            </tr>
+            <tr *ngIf="!isLoading && patients?.length === 0">
+                <tr *ngIf="!isLoading && patients.length === 0">
+              <td colspan="5" class="text-center p-4 text-muted">No hay pacientes registrados.</td>
+            </tr>
+  
+            <tr *ngFor="let p of patients">
+              <td><small class="text-muted">{{ p.id }}</small></td>
+              <td class="fw-bold">{{ p.firstName || p.first_name }} {{ p.lastName || p.last_name }}</td>
+              <td>{{ p.birthDate || p.birth_date }}</td>
+              <td>{{ p.gender }}</td>
+              <td>
+                <span class="badge" [ngClass]="p.status === 'Activo' ? 'bg-success' : 'bg-secondary'">
+                  {{ p.status }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="createPatientModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Registrar Paciente</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" #closeModalBtn></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="savePatient()">
+            
+            <div class="mb-3">
+              <label class="form-label">Nombres</label>
+              <input type="text" class="form-control" [(ngModel)]="newPatient.first_name" name="fname" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Apellidos</label>
+              <input type="text" class="form-control" [(ngModel)]="newPatient.last_name" name="lname" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" [(ngModel)]="newPatient.birth_date" name="bdate" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Género</label>
+              <select class="form-select" [(ngModel)]="newPatient.gender" name="gender">
+                <option value="Male">Masculino</option>
+                <option value="Female">Femenino</option>
+                <option value="Other">Otro</option>
+              </select>
+            </div>
+  
+            <div class="d-grid mt-3">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

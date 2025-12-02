@@ -27,6 +27,7 @@
           </tr>
 
           <tr *ngIf="!isLoading && variants?.length === 0">
+            <tr *ngIf="!isLoading && variants.length === 0">
             <td colspan="5" class="text-center p-4 text-muted">
               No hay variantes registradas.
             </td>
