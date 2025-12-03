@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------
+  # 1. BASE DE DATOS (MySQL)
+  # ----------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: genosentinel_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      # Mapeamos al puerto 3307 en tu PC para no chocar con tu MySQL local
+      # Si quieres usar Workbench, conéctate a localhost:3307
+      - "3307:3306" 
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # ----------------------------------------------------------------
+  # 2. BACKEND GENÓMICA (Django)
+  # ----------------------------------------------------------------
+  genomica:
+    image: genosentinel-genomica # Usa la imagen que ya creaste
+    build: ./services/genomica-django
+    container_name: genosentinel-genomica
+    hostname: genosentinel-genomica
+    restart: always
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=db_genomica
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - ALLOWED_HOSTS=*
+      # URL interna del contenedor de Clínica
+      - ALLOWED_HOSTS=localhost,127.0.0.1,genosentinel_genomica
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # ----------------------------------------------------------------
+  # 3. BACKEND CLÍNICA (NestJS)
+  # ----------------------------------------------------------------
+  clinica:
+    image: genosentinel-clinica
+    build: ./services/clinica-nestjs
+    container_name: genosentinel_clinica
+    restart: always
+    environment:
+      - CLINICA_DB_TYPE=mysql
+      - CLINICA_DB_HOST_NAME=mysql
+      - CLINICA_DB_PORT=3306
+      - CLINICA_DATABASE_USER=root
+      - CLINICA_DATABASE_PASSWORD=rootpassword
+      - CLINICA_DATABASE_NAME=db_clinica
+      - PORT=3001
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # ----------------------------------------------------------------
+  # 4. API GATEWAY (Spring Boot)
+  # ----------------------------------------------------------------
+  gateway:
+    image: genosentinel-gateway
+    build: ./services/auth-gateway-spring
+    container_name: genosentinel_gateway
+    restart: always
+    ports:
+      - "8080:8080" # El puerto público de la API
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=db_auth
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      # URLs internas de la red Docker
+      - GENOMICS_URL=http://genosentinel-genomica:3000/api/v1
+      - CLINICAL_URL=http://genosentinel_clinica:3001/api/v1
+    depends_on:
+      mysql:
+        condition: service_healthy
+      genomica:
+        condition: service_started
+      clinica:
+        condition: service_started
+
+  # ----------------------------------------------------------------
+  # 5. FRONTEND (Angular)
+  # ----------------------------------------------------------------
+  frontend:
+    image: genosentinel-frontend
+    build: ./Frontend
+    container_name: genosentinel_frontend
+    restart: always
+    ports:
+      - "80:80" # Acceso web en http://localhost
+    depends_on:
+      - gateway
+
+volumes:
+  mysql_data:

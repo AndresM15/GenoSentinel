@@ -13,7 +13,7 @@ def validate_patient_exists(patient_id: uuid.UUID) -> bool:
     Consulta al Microservicio de Clínica para verificar si un paciente existe.
     Esto sustituye al JOIN en la base de datos.
     """
-    endpoint = f"{CLINICA_BASE_URL}/patients/{patient_id}"
+    endpoint = f"{CLINICA_BASE_URL}/patient/find-patient/{patient_id}"
     headers = {
         # TODO: En la implementación real, deberías incluir el token JWT 
         # emitido por el Microservicio de Autenticación aquí.

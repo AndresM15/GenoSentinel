@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-t2=*7zs98t5=s67l%5@itzr$juf*4-$a@9yhx@dqs*qrsn3&@s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -85,11 +85,24 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 
+DB_HOST = os.environ.get('DB_HOST', 'localhost')
+DB_PORT = os.environ.get('DB_PORT', '3306')
+DB_NAME = os.environ.get('DB_NAME', 'db_genomica')
+DB_USER = os.environ.get('DB_USER', 'root')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'rootpassword')
+
 DATABASES = {
-    'default': env.db_url(
-        'DATABASE_URL', 
-        default=f"mysql://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@{os.environ.get('DB_HOST')}:{os.environ.get('DB_PORT')}/{os.environ.get('DB_NAME')}"
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,  # <--- AQUÍ ES DONDE DOCKER INYECTA 'mysql'
+        'PORT': DB_PORT,
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
+    }
 }
 
 DATABASES['default']['OPTIONS'] = {
@@ -138,6 +151,12 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Configuración de Whitenoise para servir archivos comprimidos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Django REST Framework configuration
@@ -156,13 +175,13 @@ REST_FRAMEWORK = {
     ],
 }
 
-# CORS configuration
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",  # Permite al frontend acceder desde localhost
-    "http://127.0.0.1:4200",  # Permite al frontend acceder desde la IP de loopback
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://genosentinel_gateway:8080", # Nombre del contenedor
+]
 
 
 SWAGGER_SETTINGS = {
